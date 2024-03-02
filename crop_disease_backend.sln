@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crop_disease_app", "crop_disease_app\crop_disease_app.csproj", "{AB2CC213-3213-4058-946E-061966AABF7D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB2CC213-3213-4058-946E-061966AABF7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB2CC213-3213-4058-946E-061966AABF7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB2CC213-3213-4058-946E-061966AABF7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB2CC213-3213-4058-946E-061966AABF7D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
