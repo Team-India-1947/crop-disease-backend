@@ -7,7 +7,7 @@ namespace hackathon_template.Controllers;
 
 public static class Routes {
     public static void ConfigureRoutes(IEndpointRouteBuilder app) {
-        app.MapGet("/test", [Authorize]() => {
+        app.MapGet("/test", () => {
             var data = new { Message = "Hello, World!", Timestamp = DateTime.UtcNow };
             return data;
         });
