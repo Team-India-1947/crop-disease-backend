@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(co => {
     co.AddDefaultPolicy(pb => {
-        pb.WithOrigins("Localhost:5432")
+        pb.AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
