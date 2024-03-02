@@ -25,7 +25,7 @@ public static class Routes {
             async (IUserService userService, UserManager<User> userManager, HttpContext httpContext)  => {
             var user = await userManager.GetUserAsync(httpContext.User);
             if (user is null) {
-                return Results.NotFound("user not found");
+                return Results.Unauthorized();
             }
             return Results.Json(new {user.FirstName, user.LastName, user.Email});
         });
@@ -39,21 +39,50 @@ public static class Routes {
         app.MapGet("/recipes", async (IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
             var user = await userManager.GetUserAsync(httpContext.User);
             if (user is null) { 
-                return Results.NotFound("user not found"); 
+                return Results.Unauthorized();
             }
             
             return Results.Json(userService.GetUserRecipes(user.Id));
         });
         
-        app.MapGet("/recipes/{recipeId}", async (string recipeId, IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
+        app.MapGet("/recipes/{recipeId}", async (int recipeId, IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
             var user = await userManager.GetUserAsync(httpContext.User);
             if (user is null) { 
-                return Results.NotFound("user not found"); 
+                return Results.Unauthorized();
             }
             
-            return Results.Json(userService.GetUserRecipes(user.Id));
+            return Results.Json(userService.GetUserRecipeById(user.Id, recipeId));
+        });
+        
+        app.MapPost("/recipes", async (RecipePostDto request, IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
+            var user = await userManager.GetUserAsync(httpContext.User);
+            if (user is null) {
+                return Results.Unauthorized();
+            }
+            
+            return Results.Json(userService.CreateRecipe(user.Id, request));
+        });
+        
+        app.MapPut("/recipes/{recipeId}", async (int recipeId, RecipePutDto request, IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
+            var user = await userManager.GetUserAsync(httpContext.User);
+            if (user is null) { 
+                return Results.Unauthorized();
+            }
+            
+            return Results.Json(userService.UpdateRecipeById(user.Id, recipeId, request));
+        });
+
+        app.MapDelete("/recipes/{recipeId}", async (int recipeId, IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
+            var user = await userManager.GetUserAsync(httpContext.User);
+            if (user is null) { 
+                return Results.Unauthorized();
+            }
+            
+            return Results.Ok();
         });
     }
 }
 
 public record UserRegistrationDto(string FirstName, string LastName, string Email);
+public record RecipePostDto(string title, string body);
+public record RecipePutDto(string title, string body);

@@ -9,4 +9,7 @@ public interface IUserService {
     IEnumerable<string> GetRoles(string userId);
     public Task SetupUserAccount(UserRegistrationDto userDto);
     List<Recipe> GetUserRecipes(string userId);
+    Recipe? GetUserRecipeById(string userId, int recipeId);
+    Recipe? UpdateRecipeById(string userId, int recipeId, RecipePutDto request);
+    Recipe? CreateRecipe(string userId, RecipePostDto request);
 }

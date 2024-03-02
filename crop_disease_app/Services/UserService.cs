@@ -60,4 +60,43 @@ public class UserService : IUserService {
         return _context.Users.Include(u => u.SavedRecipes)
             .First(u => u.Id == userId).SavedRecipes;
     }
+    
+    public Recipe? GetUserRecipeById(string userId, int recipeId) {
+        return _context.Users.Include(u => u.SavedRecipes)
+            .First(u => u.Id == userId).SavedRecipes.FirstOrDefault(r => r.id == recipeId);
+    }
+
+    public Recipe? CreateRecipe(string userId, RecipePostDto request) {
+        User user = _context.Users.Include(u => u.SavedRecipes)
+            .First(u => u.Id == userId);
+        Recipe newRecipe = new Recipe(0, request.title, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), request.body);
+        
+        user.SavedRecipes.Add(newRecipe);
+
+        _context.SaveChanges();
+        return newRecipe;
+    }
+    
+    public Recipe? UpdateRecipeById(string userId, int recipeId, RecipePutDto request) {
+        User user = _context.Users.Include(u => u.SavedRecipes)
+            .First(u => u.Id == userId);
+        Recipe oldRecipe = user.SavedRecipes.First(r=> r.id == recipeId);
+        Recipe newRecipe = new Recipe(oldRecipe.id, request.title, oldRecipe.timestamp, request.body);
+
+        user.SavedRecipes.Remove(oldRecipe);
+        user.SavedRecipes.Add(newRecipe);
+
+        _context.SaveChanges();
+        return newRecipe;
+    }
+    
+    public void DeleteRecipeById(string userId, int recipeId) {
+        User user = _context.Users.Include(u => u.SavedRecipes)
+            .First(u => u.Id == userId);
+        
+        Recipe recipeToRemove = user.SavedRecipes.First(r => r.id == recipeId);
+        user.SavedRecipes.Remove(recipeToRemove);
+
+        _context.SaveChanges();
+    }
 }
