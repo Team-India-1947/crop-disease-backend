@@ -2,12 +2,13 @@ using hackathon_template.Config;
 using hackathon_template.Controllers;
 using hackathon_template.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(co => {
     co.AddDefaultPolicy(pb => {
-        pb.WithOrigins("http://localhost:5173")
+        pb.WithOrigins("Localhost:5432")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -45,6 +46,13 @@ app.UseDefaultFiles(); // To use index.html as default page
 app.UseStaticFiles(); // To serve static files
 
 app.MapIdentityApi<User>();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
+
 await AddRoles(app);
 
 app.Run();
