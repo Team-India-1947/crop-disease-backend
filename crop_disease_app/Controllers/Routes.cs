@@ -44,6 +44,15 @@ public static class Routes {
             
             return Results.Json(userService.GetUserRecipes(user.Id));
         });
+        
+        app.MapGet("/recipes/{recipeId}", async (string recipeId, IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
+            var user = await userManager.GetUserAsync(httpContext.User);
+            if (user is null) { 
+                return Results.NotFound("user not found"); 
+            }
+            
+            return Results.Json(userService.GetUserRecipes(user.Id));
+        });
     }
 }
 
