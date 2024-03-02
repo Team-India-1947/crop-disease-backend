@@ -8,4 +8,5 @@ public interface IUserService {
     public Task AddRole(User user, UserRole role);
     IEnumerable<string> GetRoles(string userId);
     public Task SetupUserAccount(UserRegistrationDto userDto);
+    List<Recipe> GetUserRecipes(string userId);
 }

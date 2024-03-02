@@ -35,6 +35,15 @@ public static class Routes {
             emailService.SendEmail("m95150599@gmail.com", "test subject!", html);
             return Results.Ok();
         });
+
+        app.MapGet("/recipes", async (IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
+            var user = await userManager.GetUserAsync(httpContext.User);
+            if (user is null) { 
+                return Results.NotFound("user not found"); 
+            }
+            
+            return Results.Json(userService.GetUserRecipes(user.Id));
+        });
     }
 }
 

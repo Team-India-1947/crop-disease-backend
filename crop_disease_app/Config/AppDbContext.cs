@@ -14,4 +14,6 @@ public class AppDbContext : IdentityDbContext<User> {
 
         // builder.Entity<Meal>().ComplexProperty(m => m.Nutrients);
     }
+
+    public DbSet<Recipe> SavedRecipes { get; set; }
 }

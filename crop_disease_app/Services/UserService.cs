@@ -55,4 +55,9 @@ public class UserService : IUserService {
                                          && role.Name == Enum.GetName(inputRole))))
             .OrderBy(user => user.UserName);
     }
+
+    public List<Recipe> GetUserRecipes(string userId) {
+        return _context.Users.Include(u => u.SavedRecipes)
+            .First(u => u.Id == userId).SavedRecipes;
+    }
 }

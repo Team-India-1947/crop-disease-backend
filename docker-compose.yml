@@ -1,0 +1,18 @@
+services:
+  crop_disease_app:
+    container_name: crops_disease_api_container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+    
+  crops.database:
+    image: postgres:latest
+    container_name: crops.database
+    environment:
+      - POSTGRES_DB=crops
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - ./.containers/crops-db:/var/lib/postgresql/data
