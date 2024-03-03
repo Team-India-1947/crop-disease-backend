@@ -7,5 +7,4 @@ public class Alert(string postedBy, long timestamp, double latitude, double long
     public double Latitude { get; set; } = latitude;
     public double Longitude { get; set; } = longitude;
     public string Pest { get; set; } = pest;
-
 }

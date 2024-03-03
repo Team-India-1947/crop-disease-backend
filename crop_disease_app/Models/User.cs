@@ -9,7 +9,8 @@ public class User : IdentityUser {
     public List<Recipe> SavedRecipes { get; set; }
     public UserSettings userSettings { get; set; }
 
-    public User() :base() {
+    public User() : base() {
         CreatedOn = DateTime.UtcNow;
+        userSettings = new UserSettings(0.0, 0.0, 7, 10.0, true, true);
     }
 }

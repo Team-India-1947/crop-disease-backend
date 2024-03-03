@@ -40,7 +40,6 @@ public class UserService : IUserService {
         await AddRole(user, UserRole.client);
         user.FirstName = userDto.FirstName;
         user.LastName = userDto.LastName;
-        user.userSettings = new UserSettings(0.0, 0.0, 7, 10.0, true, true);
         await _context.SaveChangesAsync();
     }
 
