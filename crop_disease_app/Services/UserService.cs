@@ -99,8 +99,14 @@ public class UserService : IUserService {
         _context.SaveChanges();
     }
 
-    public void StoreDisease(string userId, string diseaseName, decimal latitude, decimal longitude, string url) {
+    public void StoreDisease(string userId, string diseaseName, double latitude, double longitude, string url) {
         _context.Diseases.Add(new Disease(0, userId, diseaseName, latitude, longitude, url));
         _context.SaveChanges();
+    }
+
+    public object? GetAlerts(DateTimeOffset dateFrom, double latitude, double longitude, double radius) {
+        return _context.Alerts.Where(a =>
+            a.Timestamp > dateFrom.ToUnixTimeSeconds() &&
+            Math.Sqrt(Math.Pow(a.Latitude - latitude, 2) + Math.Pow(a.Latitude - latitude, 2)) < radius);
     }
 }

@@ -12,9 +12,10 @@ public class AppDbContext : IdentityDbContext<User> {
     protected override void OnModelCreating(ModelBuilder builder) {
         base.OnModelCreating(builder);
 
-        // builder.Entity<Meal>().ComplexProperty(m => m.Nutrients);
+        builder.Entity<User>().ComplexProperty(m => m.UserSettings);
     }
 
     public DbSet<Recipe> SavedRecipes { get; set; }
     public DbSet<Disease> Diseases { get; set; }
+    public DbSet<Alert> Alerts { get; set; }
 }

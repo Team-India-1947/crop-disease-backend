@@ -17,6 +17,7 @@ public static class Routes {
             return data;
         });
 
+
         app.MapPost("/user-registered",
             async (UserRegistrationDto userDto, IUserService userService) => {
                 await userService.SetupUserAccount(userDto);
@@ -34,7 +35,7 @@ public static class Routes {
                     return Results.Unauthorized();
                 }
 
-                return Results.Json(new { user.FirstName, user.LastName, user.Email });
+                return Results.Json(user);
             });
 
         app.MapGet("/test-email", (IEmailService emailService) => {
@@ -112,12 +113,36 @@ public static class Routes {
                 return Results.BadRequest("No files uploaded.");
             }
             var dto = new StoreDiseaseDto
-            (form["disease_name"], decimal.Parse(form["latitude"]),
-                decimal.Parse(form["longitude"]));
+            (form["disease_name"], double.Parse(form["latitude"]),
+                double.Parse(form["longitude"]));
             IFormFile file = form.Files.First();
 
             string url = await blobService.StoreImage(file);
             userService.StoreDisease(user.Id, dto.DiseaseName, dto.Latitude, dto.Longitude, url);
+            
+            return Results.Ok();
+        });
+
+        app.MapGet("/get-alerts", async (IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
+            var user = await userManager.GetUserAsync(httpContext.User);
+            if (user is null) { 
+                return Results.Unauthorized();
+            }
+
+            var dateFrom = DateTimeOffset.UtcNow.AddHours(-user.UserSettings.AlertsFromInDays);
+            var latitude = user.UserSettings.Latitude;
+            var longitude = user.UserSettings.Longitude;
+            var radius = user.UserSettings.AlertRadius;
+
+            return Results.Json(userService.GetAlerts(dateFrom, latitude, longitude, radius));
+        });
+
+        app.MapPost("/send-alert", async (IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
+            var user = await userManager.GetUserAsync(httpContext.User);
+            if (user is null) { 
+                return Results.Unauthorized();
+            }
+            
             
             return Results.Ok();
         });
@@ -127,4 +152,4 @@ public static class Routes {
 public record UserRegistrationDto(string FirstName, string LastName, string Email);
 public record RecipePostDto(string title, string body);
 public record RecipePutDto(string title, string body);
-public record StoreDiseaseDto(string DiseaseName, decimal Latitude, decimal Longitude);
+public record StoreDiseaseDto(string DiseaseName, double Latitude, double Longitude);

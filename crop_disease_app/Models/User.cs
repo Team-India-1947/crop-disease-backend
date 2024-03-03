@@ -7,6 +7,7 @@ public class User : IdentityUser {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public List<Recipe> SavedRecipes { get; set; }
+    public UserSettings UserSettings { get; set; }
 
     public User() :base() {
         CreatedOn = DateTime.UtcNow;

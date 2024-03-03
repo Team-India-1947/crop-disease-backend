@@ -13,5 +13,6 @@ public interface IUserService {
     Recipe? UpdateRecipeById(string userId, int recipeId, RecipePutDto request);
     Recipe? CreateRecipe(string userId, RecipePostDto request);
     void DeleteRecipeById(string userId, int recipeId);
-    void StoreDisease(string userId, string requestDiseaseName, decimal requestLatitude, decimal requestLongtitude, string url);
+    void StoreDisease(string userId, string requestDiseaseName, double requestLatitude, double requestLongtitude, string url);
+    object? GetAlerts(DateTimeOffset dateFrom, double latitude, double longitude, double radius);
 }
