@@ -5,14 +5,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      ASPNETCORE_Kestrel__Certificates__Default__Password: "db"
-      ASPNETCORE_Kestrel__Certificates__Default__Path: "/app/aspnetapp.pfx"
-      ASPNETCORE_HTTPS_PORT: "443"
     depends_on:
       - db
     ports:
       - "80:8080"
+      - "443:443"
     volumes:
       - /root/.aspnet/DataProtection-Keys
 

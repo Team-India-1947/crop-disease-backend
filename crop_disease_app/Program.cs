@@ -27,6 +27,18 @@ AuthenticationConfig.AddAuthServices(builder);
 
 builder.WebHost.UseStaticWebAssets();
 
+var httpsConnectionAdapterOptions = new HttpsConnectionAdapterOptions
+{
+    SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
+    ClientCertificateMode = ClientCertificateMode.AllowCertificate,
+    ServerCertificate = new X509Certificate2("./certificate.pfx", builder.Configuration.GetSection("CertificatePassword").Get<string>())
+ 
+};
+
+builder.WebHost.ConfigureKestrel(options =&gt;
+    options.ConfigureEndpointDefaults(listenOptions =&gt;
+        listenOptions.UseHttps(httpsConnectionAdapterOptions)));
+
 var app = builder.Build();
 
 app.UseCors();
@@ -35,13 +47,12 @@ app.UseCors();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 Routes.ConfigureRoutes(app);
 
 app.MapRazorPages(); // Map Razor Pages// html support
 app.UseDefaultFiles(); // To use index.html as default page
-app.UseHttpsRedirection(); // To redirect http to https
 app.UseStaticFiles(); // To serve static files
 
 app.MapIdentityApi<User>();
