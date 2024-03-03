@@ -10,7 +10,8 @@ builder.Services.AddCors(co => {
     co.AddDefaultPolicy(pb => {
         pb.AllowAnyOrigin()
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .WithExposedHeaders("X-Total-Count");
     });
 });
 
