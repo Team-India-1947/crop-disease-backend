@@ -13,7 +13,8 @@ public static class ServiceBuilder {
         builder.Services.AddSingleton<IBlobService>( x=> 
             new BlobService(
                 x.GetRequiredService<BlobServiceClient>(), 
-                builder.Configuration.GetSection("AzureBlobStorageConnectionString").Get<string>()
+                builder.Configuration.GetSection("AzureBlobStorageConnectionString").Get<string>(),
+                builder.Configuration.GetSection("AccountKey").Get<string>()
             ));
     }
 }

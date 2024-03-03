@@ -9,10 +9,12 @@ public class BlobService : IBlobService {
     private readonly BlobServiceClient _blobServiceClient;
     private readonly string containerName = "htb-crop-images";
     private readonly string _connectionString;
+    private readonly string _accountKey;
 
-    public BlobService(BlobServiceClient blobServiceClient, string connectionString) {
+    public BlobService(BlobServiceClient blobServiceClient, string connectionString, string accountKey) {
         _blobServiceClient = blobServiceClient;
         _connectionString = connectionString;
+        _accountKey = accountKey;
     }
 
     public async Task<string> StoreImage(IFormFile image) {
@@ -38,7 +40,7 @@ public class BlobService : IBlobService {
         sasBuilder.SetPermissions(BlobSasPermissions.Read);
 
         // Append the SAS token to the blob URL
-        string sasToken = sasBuilder.ToSasQueryParameters(new StorageSharedKeyCredential(containerClient.AccountName, _connectionString)).ToString();
+        string sasToken = sasBuilder.ToSasQueryParameters(new StorageSharedKeyCredential(containerClient.AccountName, _accountKey)).ToString();
         string protectedUrl = $"{imageUrl}?{sasToken}";
         return protectedUrl;
     }
