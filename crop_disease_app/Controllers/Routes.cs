@@ -129,10 +129,10 @@ public static class Routes {
                 return Results.Unauthorized();
             }
 
-            var dateFrom = DateTimeOffset.UtcNow.AddHours(-user.UserSettings.AlertsFromInDays);
-            var latitude = user.UserSettings.Latitude;
-            var longitude = user.UserSettings.Longitude;
-            var radius = user.UserSettings.AlertRadius;
+            var dateFrom = DateTimeOffset.UtcNow.AddHours(-user.userSettings.AlertsFromInDays);
+            var latitude = user.userSettings.Latitude;
+            var longitude = user.userSettings.Longitude;
+            var radius = user.userSettings.AlertRadius;
 
             return Results.Json(userService.GetAlerts(dateFrom, latitude, longitude, radius));
         });

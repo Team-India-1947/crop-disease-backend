@@ -100,7 +100,8 @@ async Task AddRoles(WebApplication webApplication)
                 FirstName = "admin",
                 LastName = "user",
                 UserName = email,
-                Email = email
+                Email = email,
+                userSettings = new UserSettings(0.0, 0.0, 7, 10.0, true, true)
             };
             await userManager.CreateAsync(user, password);
 
