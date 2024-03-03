@@ -20,7 +20,7 @@ public class BlobService : IBlobService {
     public async Task<string> StoreImage(IFormFile image) {
         var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
         await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
-        
+    
         string imageName = $"{Guid.NewGuid().ToString()}.jpg";
         using (var stream = image.OpenReadStream())
         {
@@ -28,11 +28,11 @@ public class BlobService : IBlobService {
             var response = await containerClient.UploadBlobAsync(imageName, binaryData);
         }
         string imageUrl = containerClient.Uri.AbsoluteUri;
-        
+    
         BlobSasBuilder sasBuilder = new BlobSasBuilder
         {
             BlobContainerName = containerClient.Name,
-            BlobName = containerClient.Name,
+            BlobName = imageName, // Use imageName instead of containerClient.Name
             Resource = "b", // "b" for blob
             StartsOn = DateTimeOffset.UtcNow,
             ExpiresOn = DateTimeOffset.UtcNow.AddHours(24)
@@ -41,7 +41,7 @@ public class BlobService : IBlobService {
 
         // Append the SAS token to the blob URL
         string sasToken = sasBuilder.ToSasQueryParameters(new StorageSharedKeyCredential(containerClient.AccountName, _accountKey)).ToString();
-        string protectedUrl = $"{imageUrl}?{sasToken}";
+        string protectedUrl = $"{imageUrl}/{imageName}?{sasToken}"; // Append imageName to the URL
         return protectedUrl;
     }
 }
