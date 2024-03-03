@@ -3,3 +3,4 @@ hackathon_template/bin/
 hackathon_template/obj/
 crop_disease_app/bin
 crop_disease_app/obj
+crop_disease_app/appsettings.json
