@@ -42,7 +42,9 @@ public static class Routes {
                 return Results.Unauthorized();
             }
             
-            return Results.Json(userService.GetUserRecipes(user.Id));
+            List<Recipe> recipes = userService.GetUserRecipes(user.Id);
+            httpContext.Response.Headers["X-Total-Count"] = recipes.Count.ToString();
+            return Results.Json(recipes);
         });
         
         app.MapGet("/recipes/{recipeId}", async (int recipeId, IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
