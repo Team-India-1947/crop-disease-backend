@@ -137,13 +137,13 @@ public static class Routes {
             return Results.Json(userService.GetAlerts(dateFrom, latitude, longitude, radius));
         });
 
-        app.MapPost("/send-alert", async (IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
+        app.MapPost("/send-alert", async (string pest, IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
             var user = await userManager.GetUserAsync(httpContext.User);
             if (user is null) { 
                 return Results.Unauthorized();
             }
-            
-            
+
+            userService.StoreAlert(pest, user.Id, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), user.userSettings.Latitude, user.userSettings.Longitude);
             return Results.Ok();
         });
     }

@@ -14,5 +14,6 @@ public interface IUserService {
     Recipe? CreateRecipe(string userId, RecipePostDto request);
     void DeleteRecipeById(string userId, int recipeId);
     void StoreDisease(string userId, string requestDiseaseName, double requestLatitude, double requestLongtitude, string url);
-    object? GetAlerts(DateTimeOffset dateFrom, double latitude, double longitude, double radius);
+    List<Alert> GetAlerts(DateTimeOffset dateFrom, double latitude, double longitude, double radius);
+    void StoreAlert(string pest, string userId, long timestamp, double latitude, double longitude);
 }

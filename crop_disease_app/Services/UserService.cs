@@ -105,9 +105,14 @@ public class UserService : IUserService {
         _context.SaveChanges();
     }
 
-    public object? GetAlerts(DateTimeOffset dateFrom, double latitude, double longitude, double radius) {
+    public List<Alert> GetAlerts(DateTimeOffset dateFrom, double latitude, double longitude, double radius) {
         return _context.Alerts.Where(a =>
             a.Timestamp > dateFrom.ToUnixTimeSeconds() &&
-            Math.Sqrt(Math.Pow(a.Latitude - latitude, 2) + Math.Pow(a.Latitude - latitude, 2)) < radius);
+            Math.Sqrt(Math.Pow(a.Latitude - latitude, 2) + Math.Pow(a.Latitude - latitude, 2)) < radius).ToList();
+    }
+
+    public void StoreAlert(string pest, string userId, long timestamp, double latitude, double longitude) {
+        _context.Alerts.Add(new Alert(
+            userId, timestamp, latitude, longitude, pest));
     }
 }
