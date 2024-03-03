@@ -12,7 +12,7 @@ public class AppDbContext : IdentityDbContext<User> {
     protected override void OnModelCreating(ModelBuilder builder) {
         base.OnModelCreating(builder);
 
-        builder.Entity<User>().ComplexProperty(m => m.UserSettings);
+        builder.Entity<User>().ComplexProperty(m => m.userSettings);
     }
 
     public DbSet<Recipe> SavedRecipes { get; set; }
