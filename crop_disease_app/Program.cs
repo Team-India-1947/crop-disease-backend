@@ -1,13 +1,17 @@
+using System.Net;
 using hackathon_template.Config;
 using hackathon_template.Controllers;
 using hackathon_template.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(co => {
-    co.AddDefaultPolicy(pb => {
+builder.Services.AddCors(co =>
+{
+    co.AddDefaultPolicy(pb =>
+    {
         pb.AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod()
@@ -27,17 +31,15 @@ AuthenticationConfig.AddAuthServices(builder);
 
 builder.WebHost.UseStaticWebAssets();
 
-var httpsConnectionAdapterOptions = new HttpsConnectionAdapterOptions
-{
-    SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
-    ClientCertificateMode = ClientCertificateMode.AllowCertificate,
-    ServerCertificate = new X509Certificate2("./certificate.pfx", builder.Configuration.GetSection("CertificatePassword").Get<string>())
- 
-};
 
-builder.WebHost.ConfigureKestrel(options =&gt;
-    options.ConfigureEndpointDefaults(listenOptions =&gt;
-        listenOptions.UseHttps(httpsConnectionAdapterOptions)));
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Listen(IPAddress.Any, 443, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+        listenOptions.UseHttps("certificate.pfx", builder.Configuration.GetSection("CertificatePassword").Get<string>());
+    });
+});
 
 var app = builder.Build();
 
@@ -67,34 +69,41 @@ await AddRoles(app);
 
 app.Run();
 
-async Task AddRoles(WebApplication webApplication) {
-// add roles
-    using (var scope = webApplication.Services.CreateScope()) {
+async Task AddRoles(WebApplication webApplication)
+{
+    // add roles
+    using (var scope = webApplication.Services.CreateScope())
+    {
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var roles = Enum.GetNames(typeof(UserRole));
-        foreach (var role in roles) {
-            if (!await roleManager.RoleExistsAsync(role)) {
+        foreach (var role in roles)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
                 await roleManager.CreateAsync(new IdentityRole(role));
             }
         }
     }
 
-// add main admin, client user, partner user
-    using (var scope = webApplication.Services.CreateScope()) {
+    // add main admin, client user, partner user
+    using (var scope = webApplication.Services.CreateScope())
+    {
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
         string email = "admin@admin.com";
         string password = "Test1234!";
 
-        if (await userManager.FindByEmailAsync(email) == null) {
-            var user = new User {
+        if (await userManager.FindByEmailAsync(email) == null)
+        {
+            var user = new User
+            {
                 FirstName = "admin",
                 LastName = "user",
                 UserName = email,
                 Email = email
             };
             await userManager.CreateAsync(user, password);
-            
+
             await userManager.AddToRoleAsync(user, Enum.GetName(UserRole.admin)!);
             await userManager.AddToRoleAsync(user, Enum.GetName(UserRole.client)!);
         }
