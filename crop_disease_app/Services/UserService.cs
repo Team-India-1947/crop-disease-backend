@@ -127,4 +127,8 @@ public class UserService : IUserService {
     public List<Disease> GetUserDiseases(string userId) {
         return _context.Diseases.Where(d => d.UserId == userId).ToList();
     }
+
+    public List<Disease> GetDiseasesForUser(double latitude, double longitude, double radius) {
+        return _context.Diseases.Where(a=> Math.Sqrt(Math.Pow(a.Latitude - latitude, 2) + Math.Pow(a.Latitude - latitude, 2)) < radius).ToList();
+    }
 }

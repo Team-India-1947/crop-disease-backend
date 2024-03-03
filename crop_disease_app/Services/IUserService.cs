@@ -19,4 +19,5 @@ public interface IUserService {
     void WipeDatabase();
     void SetUserSettings(UserSettings userSettings, string userId);
     List<Disease> GetUserDiseases(string userId);
+    List<Disease> GetDiseasesForUser(double latitude, double longitude, double radius);
 }

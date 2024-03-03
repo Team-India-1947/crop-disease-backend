@@ -169,6 +169,19 @@ public static class Routes {
             
             return Results.Json(userService.GetUserDiseases(user.Id));
         });
+        
+        app.MapGet("/get-diseases-for-user", async (IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
+            var user = await userManager.GetUserAsync(httpContext.User);
+            if (user is null) { 
+                return Results.Unauthorized();
+            }
+
+            var latitude = user.userSettings.Latitude;
+            var longitude = user.userSettings.Longitude;
+            var radius = user.userSettings.AlertRadius;
+
+            return Results.Json(userService.GetDiseasesForUser( latitude, longitude, radius));
+        });
     }
 }
 
