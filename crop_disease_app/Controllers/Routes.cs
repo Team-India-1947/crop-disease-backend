@@ -119,7 +119,7 @@ public static class Routes {
             var dto = new StoreDiseaseDto
             (form["disease_name"], double.Parse(form["latitude"]),
                 double.Parse(form["longitude"]));
-            var imageFile = form.Files["image"];
+            var imageFile = form.Files["file"];
 
             string url = await blobService.StoreImage(imageFile);
             userService.StoreDisease(user.Id, dto.DiseaseName, dto.Latitude, dto.Longitude, url);
