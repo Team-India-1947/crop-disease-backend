@@ -31,16 +31,6 @@ AuthenticationConfig.AddAuthServices(builder);
 
 builder.WebHost.UseStaticWebAssets();
 
-
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.Listen(IPAddress.Any, 443, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-        listenOptions.UseHttps("certificate.pfx", builder.Configuration.GetSection("CertificatePassword").Get<string>());
-    });
-});
-
 var app = builder.Build();
 
 app.UseCors();
@@ -48,8 +38,6 @@ app.UseCors();
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
-
-app.UseHttpsRedirection();
 
 Routes.ConfigureRoutes(app);
 
