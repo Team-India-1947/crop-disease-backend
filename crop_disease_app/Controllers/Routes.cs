@@ -95,14 +95,29 @@ public static class Routes {
         });
     }
     private static void DiseaseApi(IEndpointRouteBuilder app) {
-        app.MapPost("/store-disease-datapoint", async (StoreDiseaseDto request, IUserService userService, IBlobService blobService, UserManager<User> userManager, HttpContext httpContext) => {
+        app.MapPost("/store-disease-datapoint", async (HttpRequest request, IUserService userService, IBlobService blobService, UserManager<User> userManager, HttpContext httpContext) => {
+            if (!request.HasFormContentType)
+            {
+                return Results.BadRequest("Unsupported media type");
+            }
+            
             var user = await userManager.GetUserAsync(httpContext.User);
             if (user is null) { 
                 return Results.Unauthorized();
             }
+            
+            var form = await request.ReadFormAsync();
+            if (!form.Files.Any())
+            {
+                return Results.BadRequest("No files uploaded.");
+            }
+            var dto = new StoreDiseaseDto
+            (form["disease_name"], decimal.Parse(form["latitude"]),
+                decimal.Parse(form["longitude"]));
+            IFormFile file = form.Files.First();
 
-            string url = await blobService.StoreImage(request.image);
-            userService.StoreDisease(user.Id, request.disease_name, request.latitude, request.longitude, url);
+            string url = await blobService.StoreImage(file);
+            userService.StoreDisease(user.Id, dto.DiseaseName, dto.Latitude, dto.Longitude, url);
             
             return Results.Ok();
         });
@@ -112,4 +127,4 @@ public static class Routes {
 public record UserRegistrationDto(string FirstName, string LastName, string Email);
 public record RecipePostDto(string title, string body);
 public record RecipePutDto(string title, string body);
-public record StoreDiseaseDto(string disease_name, decimal latitude, decimal longitude, BinaryData image);
+public record StoreDiseaseDto(string DiseaseName, decimal Latitude, decimal Longitude);

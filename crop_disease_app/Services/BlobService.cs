@@ -15,12 +15,12 @@ public class BlobService : IBlobService {
         _connectionString = connectionString;
     }
 
-    public async Task<string> StoreImage(BinaryData image) {
+    public async Task<string> StoreImage(IFormFile image) {
         var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
         await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
         
         string imageName = $"{Guid.NewGuid().ToString()}.jpg";
-        var response = await containerClient.UploadBlobAsync(imageName, image);
+        var response = await containerClient.UploadBlobAsync(imageName, image.OpenReadStream());
         string imageUrl = containerClient.Uri.AbsoluteUri;
         
         BlobSasBuilder sasBuilder = new BlobSasBuilder
