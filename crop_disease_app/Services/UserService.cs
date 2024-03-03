@@ -80,14 +80,13 @@ public class UserService : IUserService {
     public Recipe? UpdateRecipeById(string userId, int recipeId, RecipePutDto request) {
         User user = _context.Users.Include(u => u.SavedRecipes)
             .First(u => u.Id == userId);
-        Recipe oldRecipe = user.SavedRecipes.First(r=> r.id == recipeId);
-        Recipe newRecipe = new Recipe(oldRecipe.id, request.title, oldRecipe.timestamp, request.body);
-
-        user.SavedRecipes.Remove(oldRecipe);
-        user.SavedRecipes.Add(newRecipe);
-
+        Recipe recipe = user.SavedRecipes.First(r=> r.id == recipeId);
+        
+        recipe.title = request.title;
+        recipe.body = request.body;
+        
         _context.SaveChanges();
-        return newRecipe;
+        return recipe;
     }
     
     public void DeleteRecipeById(string userId, int recipeId) {
