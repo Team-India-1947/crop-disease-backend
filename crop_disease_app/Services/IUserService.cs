@@ -12,4 +12,6 @@ public interface IUserService {
     Recipe? GetUserRecipeById(string userId, int recipeId);
     Recipe? UpdateRecipeById(string userId, int recipeId, RecipePutDto request);
     Recipe? CreateRecipe(string userId, RecipePostDto request);
+    void DeleteRecipeById(string userId, int recipeId);
+    void StoreDisease(string userId, string requestDiseaseName, decimal requestLatitude, decimal requestLongtitude, string url);
 }

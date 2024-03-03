@@ -98,4 +98,9 @@ public class UserService : IUserService {
 
         _context.SaveChanges();
     }
+
+    public void StoreDisease(string userId, string diseaseName, decimal latitude, decimal longitude, string url) {
+        _context.Diseases.Add(new Disease(0, userId, diseaseName, latitude, longitude, url));
+        _context.SaveChanges();
+    }
 }

@@ -16,4 +16,5 @@ public class AppDbContext : IdentityDbContext<User> {
     }
 
     public DbSet<Recipe> SavedRecipes { get; set; }
+    public DbSet<Disease> Diseases { get; set; }
 }
