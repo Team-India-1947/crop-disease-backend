@@ -26,4 +26,4 @@ services:
     container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 60 app
+    command: --interval 60 app --include-stopped --cleanup --include-restarting --include-stopped
