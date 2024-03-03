@@ -41,6 +41,7 @@ Routes.ConfigureRoutes(app);
 
 app.MapRazorPages(); // Map Razor Pages// html support
 app.UseDefaultFiles(); // To use index.html as default page
+app.UseHttpsRedirection(); // To redirect http to https
 app.UseStaticFiles(); // To serve static files
 
 app.MapIdentityApi<User>();
