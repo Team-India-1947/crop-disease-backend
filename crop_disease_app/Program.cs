@@ -27,17 +27,14 @@ AuthenticationConfig.AddAuthServices(builder);
 
 builder.WebHost.UseStaticWebAssets();
 
-var httpsConnectionAdapterOptions = new HttpsConnectionAdapterOptions
-{
-    SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
-    ClientCertificateMode = ClientCertificateMode.AllowCertificate,
-    ServerCertificate = new X509Certificate2("./certificate.pfx", builder.Configuration.GetSection("CertificatePassword").Get<string>())
- 
-};
 
-builder.WebHost.ConfigureKestrel(options =&gt;
-    options.ConfigureEndpointDefaults(listenOptions =&gt;
-        listenOptions.UseHttps(httpsConnectionAdapterOptions)));
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ConfigureHttpsDefaults(listenOptions =>
+    {
+       listenOptions.UseHttps("certificate.pfx", builder.Configuration.GetSection("CertificatePassword").Get<string>());
+    });
+});
 
 var app = builder.Build();
 
