@@ -151,7 +151,7 @@ public static class Routes {
             return Results.Ok();
         });
 
-        app.MapPost("/set-user-settings", async (UserSettings userSettings,IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
+        app.MapPost("/set-user-settings", async (UserSettings userSettings, IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
             var user = await userManager.GetUserAsync(httpContext.User);
             if (user is null) { 
                 return Results.Unauthorized();
@@ -159,6 +159,15 @@ public static class Routes {
             
             userService.SetUserSettings(userSettings, user.Id);
             return Results.Ok();
+        });
+
+        app.MapGet("/get-disease-data", async (IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
+            var user = await userManager.GetUserAsync(httpContext.User);
+            if (user is null) { 
+                return Results.Unauthorized();
+            }
+            
+            return Results.Json(userService.GetUserDiseases(user.Id));
         });
     }
 }

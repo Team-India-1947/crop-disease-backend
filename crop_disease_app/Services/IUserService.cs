@@ -18,4 +18,5 @@ public interface IUserService {
     void StoreAlert(string pest, string userId, long timestamp, double latitude, double longitude);
     void WipeDatabase();
     void SetUserSettings(UserSettings userSettings, string userId);
+    List<Disease> GetUserDiseases(string userId);
 }

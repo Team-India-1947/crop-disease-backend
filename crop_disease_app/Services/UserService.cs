@@ -123,4 +123,8 @@ public class UserService : IUserService {
         _context.Users.Find(userId).userSettings = userSettings;
         _context.SaveChanges();
     }
+
+    public List<Disease> GetUserDiseases(string userId) {
+        return _context.Diseases.Where(d => d.UserId == userId).ToList();
+    }
 }
