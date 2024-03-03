@@ -16,4 +16,5 @@ public interface IUserService {
     void StoreDisease(string userId, string requestDiseaseName, double requestLatitude, double requestLongtitude, string url);
     List<Alert> GetAlerts(DateTimeOffset dateFrom, double latitude, double longitude, double radius);
     void StoreAlert(string pest, string userId, long timestamp, double latitude, double longitude);
+    void WipeDatabase();
 }

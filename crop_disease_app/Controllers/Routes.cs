@@ -17,6 +17,11 @@ public static class Routes {
             return data;
         });
 
+        app.MapGet("/wipe-users", (IUserService userService) => {
+            userService.WipeDatabase();
+            return Results.Ok();
+        });
+
 
         app.MapPost("/user-registered",
             async (UserRegistrationDto userDto, IUserService userService) => {

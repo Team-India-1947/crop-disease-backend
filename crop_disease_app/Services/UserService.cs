@@ -114,4 +114,8 @@ public class UserService : IUserService {
         _context.Alerts.Add(new Alert(
             userId, timestamp, latitude, longitude, pest));
     }
+
+    public void WipeDatabase() {
+        _context.Database.EnsureDeleted();
+    }
 }
