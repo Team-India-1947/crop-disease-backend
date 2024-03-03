@@ -22,7 +22,6 @@ public static class Routes {
             return Results.Ok();
         });
 
-
         app.MapPost("/user-registered",
             async (UserRegistrationDto userDto, IUserService userService) => {
                 await userService.SetupUserAccount(userDto);
@@ -149,6 +148,16 @@ public static class Routes {
             }
 
             userService.StoreAlert(pest, user.Id, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), user.userSettings.Latitude, user.userSettings.Longitude);
+            return Results.Ok();
+        });
+
+        app.MapPost("/set-user-settings", async (UserSettings userSettings,IUserService userService, UserManager<User> userManager, HttpContext httpContext) => {
+            var user = await userManager.GetUserAsync(httpContext.User);
+            if (user is null) { 
+                return Results.Unauthorized();
+            }
+            
+            userService.SetUserSettings(userSettings, user.Id);
             return Results.Ok();
         });
     }

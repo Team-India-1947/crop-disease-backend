@@ -17,4 +17,5 @@ public interface IUserService {
     List<Alert> GetAlerts(DateTimeOffset dateFrom, double latitude, double longitude, double radius);
     void StoreAlert(string pest, string userId, long timestamp, double latitude, double longitude);
     void WipeDatabase();
+    void SetUserSettings(UserSettings userSettings, string userId);
 }

@@ -118,4 +118,9 @@ public class UserService : IUserService {
     public void WipeDatabase() {
         _context.Database.EnsureDeleted();
     }
+
+    public void SetUserSettings(UserSettings userSettings, string userId) {
+        _context.Users.Find(userId).userSettings = userSettings;
+        _context.SaveChanges();
+    }
 }
